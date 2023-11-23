@@ -27,14 +27,13 @@ public class TelegramBotUpdate extends TelegramLongPollingBot {
             DataBase.chatId=update.getMessage().getChatId();
 
 
-        DownloadController.run(update);
+//        DownloadController.run(update);
 
         /**
          * Command buyruqlar kelsa kerakli joyga yo'naltiradi
          * masalan: /start, /currency
          */
-/*
-        Ro'yhatdan o'tish joyi
+//        Ro'yhatdan o'tish joyi
 
         if (update.hasMessage()){
             if (update.getMessage().isCommand()) {
@@ -46,9 +45,6 @@ public class TelegramBotUpdate extends TelegramLongPollingBot {
         if (update.hasMessage()){
             MessageController.run(update);
         }
-*/
-
-
     }
 
     @Override
