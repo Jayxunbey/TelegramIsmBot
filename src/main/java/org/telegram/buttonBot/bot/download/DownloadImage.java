@@ -1,49 +1,55 @@
 package org.telegram.buttonBot.bot.download;
 
-import org.apache.commons.io.FileUtils;
+
+import com.google.gson.Gson;
 import org.telegram.buttonBot.bot.data.DataBase;
-import org.telegram.telegrambots.facilities.filedownloader.TelegramFileDownloader;
-import org.telegram.telegrambots.meta.api.methods.GetFile;
-import org.telegram.telegrambots.meta.api.methods.GetMe;
-import org.telegram.telegrambots.meta.api.objects.Document;
-import org.telegram.telegrambots.meta.api.objects.File;
-import org.telegram.telegrambots.meta.api.objects.PhotoSize;
+import org.telegram.buttonBot.bot.download.model.ResponseObj;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 
-import java.io.InputStream;
+import java.io.IOException;
+
+import java.net.URI;
+
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 import static org.apache.commons.io.FileUtils.getFile;
-import static org.apache.commons.io.FileUtils.openInputStream;
 
 public class DownloadImage {
 
-    public static void run(Document document, Update update) throws TelegramApiException {
+    public static void run(Update update) throws TelegramApiException, IOException, InterruptedException {
+
+//        System.out.println("update.getMessage().getPhoto().get(2) = " + update.getMessage().getPhoto().get(2));
 
 
-            String doc_id = document.getFileId();
-//            String doc_name = document.getFileName()
-            String doc_mine = document.getMimeType();
-            long doc_size = document.getFileSize();
+        String host = "https://api.telegram.org";
+        HttpRequest request = HttpRequest.newBuilder().
+                uri(URI.create(host + "/bot"
+                        + DataBase.botToken + "/getFile?file_id="
+                        + update.getMessage().getPhoto().get(3).getFileId()))
+                .GET()
+                .build();
 
-            String getid = String.valueOf(DataBase.chatId);
+        HttpClient client = HttpClient.newBuilder().build();
 
-
-
-//            document document = new document();
-//            document.setmimetype(doc_mine);
-//            document.setfilename(doc_name);
-//            document.setfilesize(doc_size);
-//            document.setfileid(doc_id);
-
-            GetFile getfile = new GetFile();
-            getfile.setFileId(document.getFileId());
+        HttpResponse<String> response
+                = client.send(request, HttpResponse.BodyHandlers.ofString());
 
 
+        System.out.println("response.body() = " + response.body());
 
 
+        Gson gson = new Gson();
+        ResponseObj responseObj = gson.fromJson(response.body(), ResponseObj.class);
 
+        System.out.println("request.uri().getQuery() = " + request.uri().getQuery());
+
+        System.out.println("responseObj = " + responseObj);
+
+        System.out.println("Photo: -> "+host+"/file/bot" + DataBase.botToken + "/" + responseObj.getResult().file_path);
 
     }
 }
