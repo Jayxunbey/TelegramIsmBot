@@ -11,7 +11,7 @@ public class CommandController {
 
         String command = update.getMessage().getText();
 
-        System.out.println("command = " + command);
+//        System.out.println("command = " + command);
 
         if (command.equals("/start")){
             startOperation(update);
