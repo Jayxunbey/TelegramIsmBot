@@ -22,7 +22,9 @@ public class LoginUI {
 
                 User user = DataBase.userMap.get(DataBase.chatId);
 
-                getNumber(update, user);
+                if (!getNumber(update, user)) {
+                    return;
+                }
 
                 completeRegister(update, user);
                 MainUI.run(update);
@@ -40,7 +42,7 @@ public class LoginUI {
 
     private static void completeRegister(Update update, User user) {
         user.setChatId(DataBase.chatId);
-        user.setUserName(update.getMessage().getChat().getUserName());
+        user.setUserName("@"+update.getMessage().getChat().getUserName());
         user.setRegistered(true);
 
         DataBase.masterStepMap.put(DataBase.chatId, Steps.Master.MAIN);
@@ -49,26 +51,39 @@ public class LoginUI {
         DataBase.userMap.put(DataBase.chatId, user);
     }
 
-    private static void getNumber(Update update, User user) {
+    private static boolean getNumber(Update update, User user) {
         if (update.getMessage().hasText()) {
 
             String phoneNumber = update.getMessage().getText();
+
+            if (!phoneNumber.matches("\\+998\\d{9}")) {
+                SendMsg.send(DataBase.chatId, """
+                        Yaroqsiz telefon raqam
+                        Iltimos qaytadan kiriting!""");
+                return false;
+            }
+
             user = DataBase.userMap.get(DataBase.chatId);
             user.setPhoneNumber(phoneNumber);
             DataBase.userMap.put(DataBase.chatId, user);
 
             SendMsg.send(DataBase.chatId, "Siz nihoyatda go'zal ro'yhatdan o'tdingiz!");
 
-        }
-        else {
+        } else {
             SendMsg.send(DataBase.chatId, "Iltimos qaytadan tel nomeizni kiriting:");
         }
+        return true;
     }
 
-    private static void getFullName(Update update) {
+    private static boolean getFullName(Update update) {
         if (update.getMessage().hasText()) {
 
             String fullName = update.getMessage().getText();
+
+            if (!fullName.matches("[a-zA-Z\\s]{5,}")){
+                SendMsg.send(DataBase.chatId, "Yaroqsiz FIO\nIltimos qaytadan kiriting!");
+                return false;
+            }
 
             User user = new User();
             user.setFullName(fullName);
@@ -76,9 +91,9 @@ public class LoginUI {
 
             SendMsg.send(DataBase.chatId, "Tel nomerizni kiriting (example: +998901234567)");
             DataBase.registerStepsMap.put(DataBase.chatId, Steps.LoginSteps.EnterNumber);
-        }
-        else {
+        } else {
             SendMsg.send(DataBase.chatId, "Iltimos qaytadan ism familiyangizni kiriting:");
         }
+        return true;
     }
 }

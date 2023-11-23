@@ -14,18 +14,65 @@ public class CommandController {
         System.out.println("command = " + command);
 
         if (command.equals("/start")){
-            if (DataBase.userMap.containsKey(DataBase.chatId)){
-                if (DataBase.userMap.get(DataBase.chatId).isRegistered()){
-                    SendMsg.send(DataBase.chatId, "Siz ro'yhatdan o'gansiz.");
-                }else {
-                    LoginUI.run(update);
-                }
-            }else {
-                LoginUI.run(update);
-            }
+            startOperation(update);
+            return;
+        }
+
+        if (command.equals("/clearhistory")){
+            clearHistory(update);
+        }
+
+        if (command.equals("/info")){
+            infoOperation(update);
             return;
         }
 
 
+
+    }
+
+    private static void clearHistory(Update update) {
+        if (DataBase.userMap.containsKey(DataBase.chatId)) {
+            DataBase.userMap.remove(DataBase.chatId);
+        }
+        if (DataBase.registerStepsMap.containsKey(DataBase.chatId)){
+            DataBase.registerStepsMap.remove(DataBase.chatId);
+        }
+
+
+        if (DataBase.masterStepMap.containsKey(DataBase.chatId)) {
+            DataBase.masterStepMap.remove(DataBase.chatId);
+        }
+
+        LoginUI.run(update);
+
+    }
+
+    private static void infoOperation(Update update) {
+
+        if (DataBase.userMap.containsKey(DataBase.chatId)) {
+            if (DataBase.userMap.get(DataBase.chatId).isRegistered()) {
+                String infoOfUser = DataBase.userMap.get(DataBase.chatId).toString();
+                SendMsg.send(DataBase.chatId,infoOfUser);
+                return;
+            }
+        }
+        SendMsg.send(DataBase.chatId, """
+                    Siz hali ro'yhatdan o'tmagansiz
+                    
+                    Ro'yhatdan o'tish uchun /start tugmasini bosing""");
+
+    }
+
+    private static void startOperation(Update update) {
+        if (DataBase.userMap.containsKey(DataBase.chatId)){
+            if (DataBase.userMap.get(DataBase.chatId).isRegistered()){
+                SendMsg.send(DataBase.chatId, "Siz ro'yhatdan o'gansiz.");
+            }else {
+                clearHistory(update);
+            }
+        }else {
+            clearHistory(update);
+        }
     }
 }
