@@ -1,5 +1,6 @@
 package org.telegram.buttonBot.bot.upload;
 
+import org.telegram.buttonBot.bot.data.BotConfig;
 import org.telegram.buttonBot.bot.data.DataBase;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
@@ -14,10 +15,10 @@ public class UploadDocument extends Thread{
 
         InputFile inputFile = new InputFile(file);
 
-        SendDocument sendDocument = new SendDocument(DataBase.chatId.toString(), inputFile);
+        SendDocument sendDocument = new SendDocument(BotConfig.chatId.toString(), inputFile);
 
         try {
-            DataBase.bot.execute(sendDocument);
+            BotConfig.bot.execute(sendDocument);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }

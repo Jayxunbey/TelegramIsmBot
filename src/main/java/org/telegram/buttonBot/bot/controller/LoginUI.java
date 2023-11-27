@@ -1,99 +1,71 @@
 package org.telegram.buttonBot.bot.controller;
 
+import org.telegram.buttonBot.bot.data.BotConfig;
 import org.telegram.buttonBot.bot.data.DataBase;
+import org.telegram.buttonBot.bot.data.TextBase;
 import org.telegram.buttonBot.bot.entity.User;
 import org.telegram.buttonBot.bot.service.SendMsg;
 import org.telegram.buttonBot.bot.step.Steps;
+import org.telegram.telegrambots.meta.api.objects.Contact;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+
+import java.util.List;
 
 public class LoginUI {
 
     public static void run(Update update) {
 
-        if (DataBase.masterStepMap.containsKey(DataBase.chatId) &&
-                DataBase.masterStepMap.get(DataBase.chatId).equals(Steps.Master.LOGIN)) {
+        if (DataBase.masterStepMap.containsKey(BotConfig.chatId) && DataBase.masterStepMap.get(BotConfig.chatId).equals(Steps.Master.LOGIN)) {
 
-            if (DataBase.registerStepsMap.get(DataBase.chatId).equals(Steps.LoginSteps.EnterFullName)) {
-                getFullName(update);
-                return;
-            }
+            if (DataBase.registerStepsMap.get(BotConfig.chatId).equals(Steps.Login.FILLNUMBER)) {
 
-            if (DataBase.registerStepsMap.get(DataBase.chatId).equals(Steps.LoginSteps.EnterNumber)) {
-
-                User user = DataBase.userMap.get(DataBase.chatId);
-
-                if (!getNumber(update, user)) {
-                    return;
+                if (update.getMessage().hasContact()) {
+                    User user = DataBase.userMap.get(BotConfig.chatId);
+                    completeRegister(update, user);
+                    MainUI.run(update);
+                } else {
+                    sendStartMessage();
                 }
-
-                completeRegister(update, user);
-                MainUI.run(update);
                 return;
             }
 
         } else {
-            SendMsg.send(DataBase.chatId, "Assalomu aleykum.\nBo'timizga hush kelibsiz." +
-                    "\nRo'yhatdan o'tish uchun ism familiyangizni kiriting:");
-            DataBase.masterStepMap.put(DataBase.chatId, Steps.Master.LOGIN);
-            DataBase.registerStepsMap.put(DataBase.chatId, Steps.LoginSteps.EnterFullName);
+
+            sendStartMessage();
             return;
         }
     }
 
+    private static void sendStartMessage() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(List.of(new KeyboardRow(List.of(KeyboardButton.builder().text("Ro'yhatdan o'tish").requestContact(true).build()))));
+
+        replyKeyboardMarkup.setResizeKeyboard(true);
+
+        SendMsg.send(BotConfig.chatId, TextBase.Login.hello, replyKeyboardMarkup);
+
+        DataBase.userMap.put(BotConfig.chatId,new User());
+        DataBase.masterStepMap.put(BotConfig.chatId, Steps.Master.LOGIN);
+        DataBase.registerStepsMap.put(BotConfig.chatId, Steps.Login.FILLNUMBER);
+    }
+
     private static void completeRegister(Update update, User user) {
-        user.setChatId(DataBase.chatId);
-        user.setUserName("@"+update.getMessage().getChat().getUserName());
+        Contact contact = update.getMessage().getContact();
+
+        user.setChatId(BotConfig.chatId);
+        user.setFirstName(contact.getFirstName());
+        user.setPhoneNumber(contact.getPhoneNumber());
+        user.setLastName(contact.getLastName());
+        user.setUserName("@" + update.getMessage().getChat().getUserName());
         user.setRegistered(true);
 
-        DataBase.masterStepMap.put(DataBase.chatId, Steps.Master.MAIN);
-        DataBase.registerStepsMap.remove(DataBase.chatId);
+        DataBase.masterStepMap.put(BotConfig.chatId, Steps.Master.MAIN);
+        DataBase.registerStepsMap.remove(BotConfig.chatId);
 
-        DataBase.userMap.put(DataBase.chatId, user);
+        DataBase.userMap.put(BotConfig.chatId, user);
     }
 
-    private static boolean getNumber(Update update, User user) {
-        if (update.getMessage().hasText()) {
 
-            String phoneNumber = update.getMessage().getText();
-
-            if (!phoneNumber.matches("\\+998\\d{9}")) {
-                SendMsg.send(DataBase.chatId, """
-                        Yaroqsiz telefon raqam
-                        Iltimos qaytadan kiriting!""");
-                return false;
-            }
-
-            user = DataBase.userMap.get(DataBase.chatId);
-            user.setPhoneNumber(phoneNumber);
-            DataBase.userMap.put(DataBase.chatId, user);
-
-            SendMsg.send(DataBase.chatId, "Siz nihoyatda go'zal ro'yhatdan o'tdingiz!");
-
-        } else {
-            SendMsg.send(DataBase.chatId, "Iltimos qaytadan tel nomeizni kiriting:");
-        }
-        return true;
-    }
-
-    private static boolean getFullName(Update update) {
-        if (update.getMessage().hasText()) {
-
-            String fullName = update.getMessage().getText();
-
-            if (!fullName.matches("[a-zA-Z\\s]{5,}")){
-                SendMsg.send(DataBase.chatId, "Yaroqsiz FIO\nIltimos qaytadan kiriting!");
-                return false;
-            }
-
-            User user = new User();
-            user.setFullName(fullName);
-            DataBase.userMap.put(DataBase.chatId, user);
-
-            SendMsg.send(DataBase.chatId, "Tel nomerizni kiriting (example: +998901234567)");
-            DataBase.registerStepsMap.put(DataBase.chatId, Steps.LoginSteps.EnterNumber);
-        } else {
-            SendMsg.send(DataBase.chatId, "Iltimos qaytadan ism familiyangizni kiriting:");
-        }
-        return true;
-    }
 }

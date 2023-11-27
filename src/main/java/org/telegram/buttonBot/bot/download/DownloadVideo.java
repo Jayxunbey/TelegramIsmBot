@@ -1,5 +1,6 @@
 package org.telegram.buttonBot.bot.download;
 
+import org.telegram.buttonBot.bot.data.BotConfig;
 import org.telegram.buttonBot.bot.data.DataBase;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -14,7 +15,7 @@ public class DownloadVideo {
     public static void run(Update update) {
         HttpRequest request = HttpRequest.newBuilder().
                 uri(URI.create("https://api.telegram.org/bot"
-                        + DataBase.botToken+"/getFile?file_id="
+                        + BotConfig.botToken+"/getFile?file_id="
                         +update.getMessage().getVideo().getFileId()))
                 .GET()
                 .build();

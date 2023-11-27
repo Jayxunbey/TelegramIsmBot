@@ -1,6 +1,7 @@
 package org.telegram.buttonBot.bot;
 import org.telegram.buttonBot.bot.controller.CommandController;
 import org.telegram.buttonBot.bot.controller.MessageController;
+import org.telegram.buttonBot.bot.data.BotConfig;
 import org.telegram.buttonBot.bot.data.DataBase;
 import org.telegram.buttonBot.bot.controller.LoginUI;
 import org.telegram.buttonBot.bot.download.DownloadController;
@@ -15,7 +16,7 @@ public class TelegramBotUpdate extends TelegramLongPollingBot {
 
 
     public TelegramBotUpdate(){
-        super("6534338373:AAF2FJb8VOC6I747vNTvL-jcu95A4XM8uF0");
+        super(BotConfig.botToken);
     }
     @Override
 
@@ -23,8 +24,8 @@ public class TelegramBotUpdate extends TelegramLongPollingBot {
 
 
 
-            DataBase.bot=this;
-            DataBase.chatId=update.getMessage().getChatId();
+            BotConfig.bot=this;
+            BotConfig.chatId=update.getMessage().getChatId();
 
 
 //        DownloadController.run(update);
@@ -49,7 +50,7 @@ public class TelegramBotUpdate extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "https://t.me/LearnButtonBot";
+        return "https://t.me/Universal_Jayxuns_bot";
     }
 
 }

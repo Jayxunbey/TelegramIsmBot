@@ -1,5 +1,6 @@
 package org.telegram.buttonBot.bot.controller;
 
+import org.telegram.buttonBot.bot.data.BotConfig;
 import org.telegram.buttonBot.bot.data.DataBase;
 import org.telegram.buttonBot.bot.service.SendMsg;
 import org.telegram.buttonBot.bot.step.Steps;
@@ -32,16 +33,16 @@ public class CommandController {
     }
 
     private static void clearHistory(Update update) {
-        if (DataBase.userMap.containsKey(DataBase.chatId)) {
-            DataBase.userMap.remove(DataBase.chatId);
+        if (DataBase.userMap.containsKey(BotConfig.chatId)) {
+            DataBase.userMap.remove(BotConfig.chatId);
         }
-        if (DataBase.registerStepsMap.containsKey(DataBase.chatId)){
-            DataBase.registerStepsMap.remove(DataBase.chatId);
+        if (DataBase.registerStepsMap.containsKey(BotConfig.chatId)){
+            DataBase.registerStepsMap.remove(BotConfig.chatId);
         }
 
 
-        if (DataBase.masterStepMap.containsKey(DataBase.chatId)) {
-            DataBase.masterStepMap.remove(DataBase.chatId);
+        if (DataBase.masterStepMap.containsKey(BotConfig.chatId)) {
+            DataBase.masterStepMap.remove(BotConfig.chatId);
         }
 
         LoginUI.run(update);
@@ -50,14 +51,14 @@ public class CommandController {
 
     private static void infoOperation(Update update) {
 
-        if (DataBase.userMap.containsKey(DataBase.chatId)) {
-            if (DataBase.userMap.get(DataBase.chatId).isRegistered()) {
-                String infoOfUser = DataBase.userMap.get(DataBase.chatId).toString();
-                SendMsg.send(DataBase.chatId,infoOfUser);
+        if (DataBase.userMap.containsKey(BotConfig.chatId)) {
+            if (DataBase.userMap.get(BotConfig.chatId).isRegistered()) {
+                String infoOfUser = DataBase.userMap.get(BotConfig.chatId).toString();
+                SendMsg.send(BotConfig.chatId,infoOfUser);
                 return;
             }
         }
-        SendMsg.send(DataBase.chatId, """
+        SendMsg.send(BotConfig.chatId, """
                     Siz hali ro'yhatdan o'tmagansiz
                     
                     Ro'yhatdan o'tish uchun /start tugmasini bosing""");
@@ -65,9 +66,9 @@ public class CommandController {
     }
 
     private static void startOperation(Update update) {
-        if (DataBase.userMap.containsKey(DataBase.chatId)){
-            if (DataBase.userMap.get(DataBase.chatId).isRegistered()){
-                SendMsg.send(DataBase.chatId, "Siz ro'yhatdan o'gansiz.");
+        if (DataBase.userMap.containsKey(BotConfig.chatId)){
+            if (DataBase.userMap.get(BotConfig.chatId).isRegistered()){
+                SendMsg.send(BotConfig.chatId, "Siz ro'yhatdan o'gansiz.");
             }else {
                 clearHistory(update);
             }

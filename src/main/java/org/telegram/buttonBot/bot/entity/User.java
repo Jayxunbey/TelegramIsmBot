@@ -12,7 +12,8 @@ import org.telegram.buttonBot.bot.step.Steps;
 public class User {
 
     private Long chatId;
-    private String fullName;
+    private String firstName;
+    private String lastName;
     private String phoneNumber;
     private String userName;
     private boolean isRegistered;

@@ -2,6 +2,7 @@ package org.telegram.buttonBot.bot.download;
 
 
 import com.google.gson.Gson;
+import org.telegram.buttonBot.bot.data.BotConfig;
 import org.telegram.buttonBot.bot.data.DataBase;
 import org.telegram.buttonBot.bot.download.model.ResponseObj;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -15,6 +16,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 
 import static org.apache.commons.io.FileUtils.getFile;
 
@@ -27,8 +29,8 @@ public class DownloadImage {
 
         String host = "https://api.telegram.org";
         HttpRequest request = HttpRequest.newBuilder().
-                uri(URI.create(host + "/bot"
-                        + DataBase.botToken + "/getFile?file_id="
+                 uri(URI.create(host + "/bot"
+                        + BotConfig.botToken + "/getFile?file_id="
                         + update.getMessage().getPhoto().get(3).getFileId()))
                 .GET()
                 .build();
@@ -49,7 +51,7 @@ public class DownloadImage {
 
         System.out.println("responseObj = " + responseObj);
 
-        System.out.println("Photo: -> "+host+"/file/bot" + DataBase.botToken + "/" + responseObj.getResult().file_path);
+        System.out.println("Photo: -> "+host+"/file/bot" + BotConfig.botToken + "/" + responseObj.getResult().file_path);
 
     }
 }
