@@ -16,6 +16,13 @@ public class Steps {
         GAMEWITHFRIEND,
         GAMERANDOMLY;
         public enum gameWithBot{
+            STARTGAME,
+            ONGAME;
+        }
+        public enum gameWithFriend{
+
+        }
+        public enum gameRandomly{
 
         }
     }

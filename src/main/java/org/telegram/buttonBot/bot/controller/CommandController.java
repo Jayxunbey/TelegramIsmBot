@@ -3,7 +3,7 @@ package org.telegram.buttonBot.bot.controller;
 import org.telegram.buttonBot.bot.data.BotConfig;
 import org.telegram.buttonBot.bot.data.DataBase;
 import org.telegram.buttonBot.bot.service.SendMsg;
-import org.telegram.buttonBot.bot.step.Steps;
+import org.telegram.buttonBot.bot.ui.LoginUI;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class CommandController {
@@ -33,11 +33,11 @@ public class CommandController {
     }
 
     private static void clearHistory(Update update) {
-        if (DataBase.userMap.containsKey(BotConfig.chatId)) {
-            DataBase.userMap.remove(BotConfig.chatId);
+        if (DataBase.userData.containsKey(BotConfig.chatId)) {
+            DataBase.userData.remove(BotConfig.chatId);
         }
-        if (DataBase.registerStepsMap.containsKey(BotConfig.chatId)){
-            DataBase.registerStepsMap.remove(BotConfig.chatId);
+        if (DataBase.Login.registerStepsMap.containsKey(BotConfig.chatId)){
+            DataBase.Login.registerStepsMap.remove(BotConfig.chatId);
         }
 
 
@@ -51,14 +51,14 @@ public class CommandController {
 
     private static void infoOperation(Update update) {
 
-        if (DataBase.userMap.containsKey(BotConfig.chatId)) {
-            if (DataBase.userMap.get(BotConfig.chatId).isRegistered()) {
-                String infoOfUser = DataBase.userMap.get(BotConfig.chatId).toString();
-                SendMsg.send(BotConfig.chatId,infoOfUser);
+        if (DataBase.userData.containsKey(BotConfig.chatId)) {
+            if (DataBase.userData.get(BotConfig.chatId).isRegistered()) {
+                String infoOfUser = DataBase.userData.get(BotConfig.chatId).toString();
+                SendMsg.send(BotConfig.chatId,null,infoOfUser);
                 return;
             }
         }
-        SendMsg.send(BotConfig.chatId, """
+        SendMsg.send(BotConfig.chatId,update, """
                     Siz hali ro'yhatdan o'tmagansiz
                     
                     Ro'yhatdan o'tish uchun /start tugmasini bosing""");
@@ -66,9 +66,9 @@ public class CommandController {
     }
 
     private static void startOperation(Update update) {
-        if (DataBase.userMap.containsKey(BotConfig.chatId)){
-            if (DataBase.userMap.get(BotConfig.chatId).isRegistered()){
-                SendMsg.send(BotConfig.chatId, "Siz ro'yhatdan o'gansiz.");
+        if (DataBase.userData.containsKey(BotConfig.chatId)){
+            if (DataBase.userData.get(BotConfig.chatId).isRegistered()){
+                SendMsg.send(BotConfig.chatId,null, "Siz ro'yhatdan o'gansiz.");
             }else {
                 clearHistory(update);
             }
