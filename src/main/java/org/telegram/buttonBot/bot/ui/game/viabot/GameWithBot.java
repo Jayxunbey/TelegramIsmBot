@@ -25,6 +25,7 @@ public class GameWithBot {
                         return;
                     }
                     if (data.equals("STARTGAME")) {
+                        DataBase.Main.GameType.gameWithBot.put(BotConfig.chatId, Steps.Main.gameWithBot.ONGAME);
                         OnChatViaBot.run(update);
                         return;
                     }
@@ -38,7 +39,10 @@ public class GameWithBot {
                         .put(BotConfig.chatId,
                                 Steps.Main.valueOf("GAMEWITHBOT"));
                 //// game with bot o'yinni boshlash uchun kod
-                String text = "Quyidagilardan birini tanlang";
+                String text = "Siz \uD83E\uDD16Bot bilan  o'ynash rejimidasiz, \n" +
+                        "Ism o'yini \uD83C\uDFAE siz va bot orasida olib boriladi (\uD83D\uDC68\uD83C\uDFFC\u200D\uD83D\uDCBB-\uD83E\uDD16)\n" +
+                        "\n" +
+                        "O'yinni boshlash uchun quyidagi tugmani bosing \uD83D\uDC47";
 
                 SendMsg.send(BotConfig.chatId, update, text, KeyboardBase.GameWithBot.gameWithBot.get(Steps.Main.gameWithBot.STARTGAME));
                 DataBase.Main.gameType.put(BotConfig.chatId, Steps.Main.GAMEWITHBOT);

@@ -19,8 +19,15 @@ public class Service {
         if (update.hasCallbackQuery()){
             // Call back queryniki
             CallbackQuery callbackQuery = update.getCallbackQuery();
-            deleteMessage.setMessageId(callbackQuery.getMessage().getMessageId());
-            deleteMessage.setChatId(BotConfig.chatId);
+            if (callbackQuery.getMessage()!=null) {
+                deleteMessage.setMessageId(callbackQuery.getMessage().getMessageId());
+                deleteMessage.setChatId(BotConfig.chatId);
+                try {
+                    BotConfig.bot.execute(deleteMessage);
+                } catch (TelegramApiException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }else{
             // Messasgeniki
             Message message = update.getMessage();
@@ -28,11 +35,6 @@ public class Service {
             deleteMessage.setChatId(BotConfig.chatId);
         }
 
-        try {
-            BotConfig.bot.execute(deleteMessage);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
-        }
 
     }
 
@@ -44,7 +46,7 @@ public class Service {
         EditMessageText editMessageText = new EditMessageText();
         editMessageText.setChatId(BotConfig.chatId);
         editMessageText.setMessageId(messageId);
-        editMessageText.setText(TempBase.lastMessage.get(BotConfig.chatId).getText());
+        editMessageText.setText(TempBase.Last.lastMessage.get(BotConfig.chatId).getText());
 
         try {
             BotConfig.bot.execute(editMessageText);
@@ -56,7 +58,10 @@ public class Service {
 
     public static Integer getMessageId(Update update) {
         if (update.hasCallbackQuery()){
-            return update.getCallbackQuery().getMessage().getMessageId();
+            if (update.getCallbackQuery().getMessage()!=null){
+                return update.getCallbackQuery().getMessage().getMessageId();
+            }
+            return 0;
         }else {
             return update.getMessage().getMessageId();
         }

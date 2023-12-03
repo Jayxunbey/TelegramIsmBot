@@ -17,7 +17,7 @@ public class SendMsg {
         sendMessage.setChatId(chatId);
         sendMessage.setText(message);
 
-        TempBase.lastMessage.put(BotConfig.chatId, Service.getMessageAsLast(sendMessage));
+        TempBase.Last.lastMessage.put(BotConfig.chatId, Service.getMessageAsLast(sendMessage));
 
         try {
             BotConfig.bot.execute(sendMessage);
@@ -37,7 +37,7 @@ public class SendMsg {
             Service.deleteMessage(updateForEdit);
         }
 
-        TempBase.lastMessage.put(BotConfig.chatId, Service.getMessageAsLast(sendMessage));
+        TempBase.Last.lastMessage.put(BotConfig.chatId, Service.getMessageAsLast(sendMessage));
 
 
         try {
@@ -58,7 +58,7 @@ public class SendMsg {
 
 
 
-        TempBase.lastMessage.put(BotConfig.chatId, Service.getMessageAsLast(sendMessage));
+        TempBase.Last.lastMessage.put(BotConfig.chatId, Service.getMessageAsLast(sendMessage));
 
 
         try {
@@ -78,7 +78,7 @@ public class SendMsg {
         sendMessage.setReplyToMessageId(messageId);
         sendMessage.setReplyMarkup(keyboardMarkup);
 
-        TempBase.lastMessage.put(BotConfig.chatId, Service.getMessageAsLast(sendMessage));
+        TempBase.Last.lastMessage.put(BotConfig.chatId, Service.getMessageAsLast(sendMessage));
 
         try {
             BotConfig.bot.execute(sendMessage);

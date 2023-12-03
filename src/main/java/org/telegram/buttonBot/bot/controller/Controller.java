@@ -7,7 +7,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class Controller {
 
     public static void run(Update update, TelegramLongPollingBot bot) {
+
+
+
         if (update.hasMessage()) {
+
 
             BotConfig.bot = bot;
             BotConfig.chatId = update.getMessage().getChatId();

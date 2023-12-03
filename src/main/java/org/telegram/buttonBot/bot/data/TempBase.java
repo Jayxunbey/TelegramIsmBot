@@ -11,6 +11,11 @@ public class TempBase {
     public static Map<Long, Boolean> chooseControlOfBot = new HashMap<>();
     public static Map<Long, ChatGame> chatGame = new HashMap<>();
 
-    public static Map<Long, Message> lastMessage = new HashMap<>();
+    public static class Last{
+        public static Map<Long, Message> lastMessage = new HashMap<>();
+
+        public static Map<Long, String> lastLetter = new HashMap<>();
+    }
+
 
 }

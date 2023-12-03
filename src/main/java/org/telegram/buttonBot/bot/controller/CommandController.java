@@ -4,6 +4,7 @@ import org.telegram.buttonBot.bot.data.BotConfig;
 import org.telegram.buttonBot.bot.data.DataBase;
 import org.telegram.buttonBot.bot.service.SendMsg;
 import org.telegram.buttonBot.bot.ui.LoginUI;
+import org.telegram.buttonBot.bot.ui.game.viabot.OnChatViaBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class CommandController {
@@ -12,7 +13,7 @@ public class CommandController {
 
         String command = update.getMessage().getText();
 
-//        System.out.println("command = " + command);
+        System.out.println("command = " + command);
 
         if (command.equals("/start")){
             startOperation(update);
@@ -28,8 +29,27 @@ public class CommandController {
             return;
         }
 
+        if (command.equals("/stop")){
+            mashrutGame(update);
+            return;
+        }
 
 
+
+    }
+
+    private static void mashrutGame(Update update) {
+        if (DataBase.Main.gameType.containsKey(BotConfig.chatId)) {
+            switch (DataBase.Main.gameType.get(BotConfig.chatId)) {
+                case GAMEWITHBOT: {
+                    System.out.println("WithBot Case Iishladi commandagi");
+                    OnChatViaBot.stopGame(update);
+                    return;
+                }
+                case GAMEWITHFRIEND: {}
+                case GAMERANDOMLY: {}
+            }
+        }
     }
 
     private static void clearHistory(Update update) {

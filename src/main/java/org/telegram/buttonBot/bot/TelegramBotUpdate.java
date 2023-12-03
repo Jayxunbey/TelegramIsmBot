@@ -26,7 +26,7 @@ public class TelegramBotUpdate extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "https://t.me/Universal_Jayxuns_bot";
+        return "https://t.me/Ism_Game_Bot";
     }
 
 }
