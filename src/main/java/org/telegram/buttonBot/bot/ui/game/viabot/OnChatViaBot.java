@@ -195,7 +195,7 @@ public class OnChatViaBot {
         }
 
 
-
+        listOfLines = new ArrayList<>(listOfLines.stream().skip((int) (Math.random() * 5)).toList());
 
         for (String string : listOfLines) {
              result = string.split(",")[2];
